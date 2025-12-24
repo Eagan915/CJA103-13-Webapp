@@ -1,0 +1,51 @@
+package com.productimage.model;
+
+import java.io.Serializable;
+import java.sql.Date;
+
+public class ProductImageVO implements Serializable{
+	private Integer imgno;
+	private Integer prodno;
+	private Date uploaddate;
+	private byte[] upfile;
+	
+	public ProductImageVO () {
+		
+	}
+
+	public Integer getImgno() {
+		return imgno;
+	}
+
+	public void setImgno(Integer imgno) {
+		this.imgno = imgno;
+	}
+
+	public Integer getProdno() {
+		return prodno;
+	}
+
+	public void setProdno(Integer prodno) {
+		this.prodno = prodno;
+	}
+
+	public Date getUploaddate() {
+		return uploaddate;
+	}
+
+	public void setUploaddate(Date uploaddate) {
+		this.uploaddate = uploaddate;
+	}
+
+	public byte[] getUpfile() {
+		return upfile;
+	}
+
+	public void setUpfile(byte[] upfile) {
+		this.upfile = upfile;
+	}
+	
+	
+	
+
+}

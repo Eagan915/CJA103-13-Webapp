@@ -1,0 +1,131 @@
+package com.productimage.controller;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.productimage.model.ProductImageService;
+import com.productimage.model.ProductImageVO;
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+
+@WebServlet("/ProductImage")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 5 * 1024 * 1024, maxRequestSize = 5 * 5 * 1024 * 1024)
+public class ProductImageServlet extends HttpServlet {
+
+	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		doPost(req, res);
+	}
+
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		res.setCharacterEncoding("UTF-8");
+		res.setContentType("text/html; charset=UTF-8");
+		PrintWriter out = res.getWriter();
+		String action = req.getParameter("action");
+
+		if ("getOneImage".equals(action)) {
+			List<String> errorMsgs = new LinkedList<String>();
+
+			req.setAttribute("errorMsgs", errorMsgs);
+
+//			                    接收請求參數
+			String str = req.getParameter("imgno");
+			if (str == null || (str.trim().length() == 0)) {
+				errorMsgs.add("請輸入商品圖片編號");
+			}
+			if (!errorMsgs.isEmpty()) {
+				RequestDispatcher failureView = req.getRequestDispatcher("/select_page.jsp");
+				failureView.forward(req, res);
+				return;
+			}
+
+			Integer imgno = null;
+			try {
+				imgno = Integer.valueOf(str);
+			} catch (Exception e) {
+				errorMsgs.add("商品圖片編號格式不正確");
+			}
+			if (!errorMsgs.isEmpty()) {
+				RequestDispatcher failureView = req.getRequestDispatcher("/select_page.jsp");
+				failureView.forward(req, res);
+				return;
+			}
+//			                  開始查詢資料
+			ProductImageService piSvc = new ProductImageService();
+			ProductImageVO piVO = piSvc.getOneImage(imgno);
+			if(piVO == null) {
+				errorMsgs.add("查無資料");
+			}
+			if (!errorMsgs.isEmpty()) {
+				RequestDispatcher failureView = req.getRequestDispatcher("/select_page.jsp");
+				failureView.forward(req, res);
+				return;
+			}
+			
+//			                查詢完成，準備轉交
+			req.setAttribute("piVO", piVO);
+			String url = "/listOneProductImage.jsp";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+			
+		}
+		
+		if("insert".equals(action)) {
+			
+			List<String> errorMsgs = new LinkedList<String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+
+//			                  接受請求參數
+			String prodnoReg ="^\\d{4}$";
+			String str = req.getParameter("prodno");
+			if (str == null || (str.trim().length() == 0)) {
+				errorMsgs.add("商品編號: 請勿空白");
+			}else if(!str.trim().matches(prodnoReg)) {
+				errorMsgs.add("商品編號: 只能是數字，且長度為4");
+			}
+			Integer prodno = Integer.valueOf(str);
+			
+			
+			Part part = req.getPart("upfile");
+			InputStream in = part.getInputStream();
+			byte[] upfile = null;
+			if(part == null ||  part.getSize() == 0) {
+				errorMsgs.add("請上傳圖片");
+			}else {
+//				upfile = new byte[in.available()];
+//				in.read(upfile);
+				upfile = in.readAllBytes();
+				in.close();
+			}
+			ProductImageVO piVO = new ProductImageVO();
+			piVO.setProdno(prodno);
+			piVO.setUpfile(upfile);
+			
+			if(!errorMsgs.isEmpty()) {
+				req.setAttribute("piVO", piVO);
+				RequestDispatcher failureView = req.getRequestDispatcher("/addProductImage.jsp");
+				failureView.forward(req, res);
+				return;
+			}
+			
+//			                 開始新增資料
+			ProductImageService piSvc = new ProductImageService();
+			piVO = piSvc.addProductImage(prodno, upfile);
+			
+//			               新增完成，準備轉交
+			String url = "listAllProductImage";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+		}
+		
+	}
+}
