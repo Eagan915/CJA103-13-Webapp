@@ -1,18 +1,22 @@
 package com.productimage.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
+
+import com.productimage.model.ProductImageService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.productimage.model.ProductImageService;
 
+@WebServlet("/DisplayImage")
 public class DisplayImageServlet extends HttpServlet{
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)throws ServletException, IOException {
-		res.setContentType("image/gif");
+		res.setContentType("image/gif, image/png");
 		ServletOutputStream out = res.getOutputStream();
 		
 		try {
@@ -24,7 +28,10 @@ public class DisplayImageServlet extends HttpServlet{
 			out.write(pic);
 			}
 		}catch(Exception e) {
-			
+			InputStream in = getServletContext().getResourceAsStream("/resources/image/17134613.png");
+			byte[] error = in.readAllBytes();
+			out.write(error);
+			in.close();
 		}
 	}
 

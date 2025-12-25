@@ -122,7 +122,91 @@ public class ProductImageServlet extends HttpServlet {
 			piVO = piSvc.addProductImage(prodno, upfile);
 			
 //			               新增完成，準備轉交
+			String url = "/listAllProductImage.jsp";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+		}
+		
+		if("getAll".equals(action)) {
+			ProductImageService piSvc = new ProductImageService();
+			List<ProductImageVO> piList = piSvc.getAll();
+			String url = "listAllImage.jsp";
+			req.setAttribute("piVO", piList);
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+			return;
+		}
+		
+		if("update".equals(action)) {
+			
+			List<String> errorMsgs = new LinkedList<String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+//			         接受請求參數
+			Integer imgno = Integer.valueOf(req.getParameter("imgno").trim());
+			
+			String prodnoReg = "^\\d{4}$";
+			String str = req.getParameter("prodno");
+			if(str == null || str.trim().length() ==0) {
+				errorMsgs.add("商品編號: 請勿空白");
+			}else if(!str.trim().matches(prodnoReg)) {
+				errorMsgs.add("商品編號: 只能是數字，且長度為4");
+			}
+			Integer prodno = Integer.valueOf(str);
+			
+			Part part = req.getPart("upfile");
+			InputStream in = part.getInputStream();
+			byte[] upfile = null;
+			if(part == null || part.getSize() == 0) {
+				errorMsgs.add("請上傳圖片");
+			}else {
+				upfile = in.readAllBytes();
+				in.close();
+			}
+			ProductImageVO piVO = new ProductImageVO();
+			piVO.setImgno(imgno);
+			piVO.setProdno(prodno);
+			piVO.setUpfile(upfile);
+			
+			if(!errorMsgs.isEmpty()) {
+				req.setAttribute("piVO", piVO);
+				RequestDispatcher failureView = req.getRequestDispatcher("/update_image_input.jsp");
+				failureView.forward(req, res);
+				return;
+			}
+//                   開始修改資料
+			ProductImageService piSvc = new ProductImageService();
+			piVO = piSvc.updateProductImage(imgno, prodno, upfile);
+			
+//                修改完成，準備轉交
+			req.setAttribute("piVO", piVO);
+			String url = "/listOneProductImage.jsp";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+		}
+		
+		if("delete".equals(action)) {
+			List<String> errorMsgs = new LinkedList<String>();
+			Integer imgno = Integer.valueOf(req.getParameter("imgno"));
+			ProductImageService piSvc = new ProductImageService();
+			piSvc.deleteImage(imgno);
 			String url = "listAllProductImage";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+		}
+		
+		if("getOne_For_Update".equals(action)) {
+			List<String> errorMsgs = new LinkedList<String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+//			接收請求參數
+			Integer imgno = Integer.valueOf(req.getParameter("imgno"));
+
+//			開始查詢資料
+			ProductImageService piSvc = new ProductImageService();
+			ProductImageVO piVO = piSvc.getOneImage(imgno);
+			
+//			查詢完成，轉交資料
+			req.setAttribute("piVO", piVO);
+			String url = "update_image_input.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 		}

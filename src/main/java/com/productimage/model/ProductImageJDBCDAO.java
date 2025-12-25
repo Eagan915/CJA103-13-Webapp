@@ -1,8 +1,15 @@
 package com.productimage.model;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.*;
 
 public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 	private static final String driver = "com.mysql.cj.jdbc.Driver";
@@ -129,13 +136,67 @@ public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 		}
 		return list;
 	}
+	
 //	public static void main(String[] args) {
 //		ProductImageJDBCDAO dao = new ProductImageJDBCDAO();
-//		ProductImageVO piVO =dao.findByPrimaryKey(3001);
+//		ProductImageVO piVO = dao.findByPrimaryKey(3001);
 //		System.out.print(piVO.getImgno() + ",");
 //		System.out.print(piVO.getProdno() + ",");
 //		System.out.print(piVO.getUploaddate() + ",");
 //		System.out.print(piVO.getUpfile() + ",");
 //	}
+	
+//	public static void main(String[] args) {
+//		ProductImageJDBCDAO dao = new ProductImageJDBCDAO();
+//		ProductImageVO piVO = new ProductImageVO();
+//		
+//		piVO.setProdno(2001);
+//		piVO.setUploaddate(new java.sql.Date(System.currentTimeMillis()));
+//		
+//		try {
+//			File file = new File("C:/Users/TMP-214/Pictures/17134613.png");
+//			byte[] pic = Files.readAllBytes(file.toPath());
+//			piVO.setUpfile(pic);
+//		}catch(IOException e){
+//			e.printStackTrace();
+//		}
+//		dao.insert(piVO);
+//		
+//	}
+	
+//	public static void main(String[] args) {
+//		ProductImageJDBCDAO dao = new ProductImageJDBCDAO();
+//		ProductImageVO piVO = new ProductImageVO();
+//		
+//		piVO.setImgno(3021);
+//		piVO.setProdno(2020);
+//		dao.update(piVO);
+//	} 
+
+//	public static void main(String[] args) {
+//		ProductImageJDBCDAO dao = new ProductImageJDBCDAO();
+//		dao.delete(3021);
+//		System.out.println("刪除成功");
+//		
+//	} 
+	
+//	public static void main(String[] args) {
+//		ProductImageJDBCDAO dao = new ProductImageJDBCDAO();
+//		List<ProductImageVO> list = dao.getAll();
+//		for (ProductImageVO piVO : list) {
+//			System.out.print("圖片編號:"+piVO.getImgno()+"，");
+//			System.out.print("商品編號:"+piVO.getProdno()+"，");
+//			System.out.print("上傳時間:"+piVO.getUploaddate()+"，");
+//			
+//			byte[] pic = piVO.getUpfile();
+//			if(pic != null) {
+//				System.out.println("圖片大小:" + pic.length + "bytes");
+//			}else {
+//				System.out.println("尚無圖片");
+//			}
+//		}
+//		System.out.println("執行完成");
+//	} 
+	
 
 }
