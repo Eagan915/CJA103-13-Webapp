@@ -31,6 +31,7 @@ public class ProductImageServlet extends HttpServlet {
 		res.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = res.getWriter();
 		String action = req.getParameter("action");
+		System.out.println("收到請求，Action 為: " + action);
 
 		if ("getOneImage".equals(action)) {
 			List<String> errorMsgs = new LinkedList<String>();
@@ -43,7 +44,7 @@ public class ProductImageServlet extends HttpServlet {
 				errorMsgs.add("請輸入商品圖片編號");
 			}
 			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/select_page.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/back_end/productimage/select_page.jsp");
 				failureView.forward(req, res);
 				return;
 			}
@@ -55,7 +56,7 @@ public class ProductImageServlet extends HttpServlet {
 				errorMsgs.add("商品圖片編號格式不正確");
 			}
 			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/select_page.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/back_end/productimage/select_page.jsp");
 				failureView.forward(req, res);
 				return;
 			}
@@ -66,7 +67,7 @@ public class ProductImageServlet extends HttpServlet {
 				errorMsgs.add("查無資料");
 			}
 			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/select_page.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/back_end/productimage/select_page.jsp");
 				failureView.forward(req, res);
 				return;
 			}
@@ -122,7 +123,7 @@ public class ProductImageServlet extends HttpServlet {
 			piVO = piSvc.addProductImage(prodno, upfile);
 			
 //			               新增完成，準備轉交
-			String url = "/listAllProductImage.jsp";
+			String url = "/back_end/productimage/listAllProductImage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 		}
@@ -130,8 +131,8 @@ public class ProductImageServlet extends HttpServlet {
 		if("getAll".equals(action)) {
 			ProductImageService piSvc = new ProductImageService();
 			List<ProductImageVO> piList = piSvc.getAll();
-			String url = "listAllImage.jsp";
-			req.setAttribute("piVO", piList);
+			String url = "/back_end/productimage/listAllProductImage.jsp";
+			req.setAttribute("piList", piList);
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 			return;
@@ -189,7 +190,7 @@ public class ProductImageServlet extends HttpServlet {
 			Integer imgno = Integer.valueOf(req.getParameter("imgno"));
 			ProductImageService piSvc = new ProductImageService();
 			piSvc.deleteImage(imgno);
-			String url = "listAllProductImage";
+			String url = "/back_end/productimage/listAllProductImage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 		}
