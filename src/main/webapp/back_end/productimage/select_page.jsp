@@ -58,15 +58,16 @@
 				 <input type="submit" value="送出">
 			</form>
 	</li>
-	<hr>
 	
-	<h3>新增圖片:</h3>
-	<form method="post" action="${pageContext.request.contextPath}/ProductImage" enctype="multipart/form-data">
-	商品編號: <input type="text" name="prodno"><br>
-	選擇圖片: <input type="file" name="upfile"><br>
-	<input type="hidden" name="action" value="insert">
-	<input type="submit" value="新增">
-	</form>
+	<a href="${pageContext.request.contextPath}/back_end/productimage/addProductImage.jsp">新增圖片</a>
+	
+<!-- 	<h3>新增圖片:</h3> -->
+<%-- 	<form method="post" action="${pageContext.request.contextPath}/ProductImage" enctype="multipart/form-data"> --%>
+<!-- 	商品編號: <input type="text" name="prodno"><br> -->
+<!-- 	選擇圖片: <input type="file" name="upfile"><br> -->
+<!-- 	<input type="hidden" name="action" value="insert"> -->
+<!-- 	<input type="submit" value="新增"> -->
+<!-- 	</form> -->
 	
 	
 </body>

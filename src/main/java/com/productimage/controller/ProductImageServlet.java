@@ -122,6 +122,9 @@ public class ProductImageServlet extends HttpServlet {
 			ProductImageService piSvc = new ProductImageService();
 			piVO = piSvc.addProductImage(prodno, upfile);
 			
+			List<ProductImageVO> piList = piSvc.getAll();
+			req.setAttribute("piList", piList);
+			
 //			               新增完成，準備轉交
 			String url = "/back_end/productimage/listAllProductImage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
@@ -131,8 +134,8 @@ public class ProductImageServlet extends HttpServlet {
 		if("getAll".equals(action)) {
 			ProductImageService piSvc = new ProductImageService();
 			List<ProductImageVO> piList = piSvc.getAll();
-			String url = "/back_end/productimage/listAllProductImage.jsp";
 			req.setAttribute("piList", piList);
+			String url = "/back_end/productimage/listAllProductImage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 			return;
@@ -190,6 +193,8 @@ public class ProductImageServlet extends HttpServlet {
 			Integer imgno = Integer.valueOf(req.getParameter("imgno"));
 			ProductImageService piSvc = new ProductImageService();
 			piSvc.deleteImage(imgno);
+			List<ProductImageVO> piList = piSvc.getAll();
+			req.setAttribute("piList", piList);
 			String url = "/back_end/productimage/listAllProductImage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);

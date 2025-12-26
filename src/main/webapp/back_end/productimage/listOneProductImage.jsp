@@ -9,6 +9,8 @@
 </head>
 <body>
 <a href="${pageContext.request.contextPath}/back_end/productimage/select_page.jsp">返回首頁</a>
+<br>
+<b>查詢結果:</b>
 <table>
 <tr>
 <th>圖片編號</th>
