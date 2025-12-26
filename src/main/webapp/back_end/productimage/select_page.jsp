@@ -32,7 +32,32 @@
 			</form>
 		</li>
 	</ul>
+	<jsp:useBean id="piSvc" scope="page" class="com.productimage.model.ProductImageService"/>
 	
+	<li>
+			<form method="post" action="${pageContext.request.contextPath}/ProductImage">
+				<b>選擇圖片編號:</b> 
+				<select name="imgno">
+				<c:forEach var="piVO" items="${piSvc.all}">
+				<option value="${piVO.imgno}">圖片編號:${piVO.imgno}
+				</c:forEach>
+				</select>
+				 <input type="hidden" name="action" value="getOneImage">
+				 <input type="submit" value="送出">
+			</form>
+	</li>
+	<li>
+			<form method="post" action="${pageContext.request.contextPath}/ProductImage">
+				<b>選擇商品編號:</b> 
+				<select name="imgno">
+				<c:forEach var="piVO" items="${piSvc.all}">
+				<option value="${piVO.imgno}">商品編號:${piVO.prodno}
+				</c:forEach>
+				</select>
+				 <input type="hidden" name="action" value="getOneImage">
+				 <input type="submit" value="送出">
+			</form>
+	</li>
 	<hr>
 	
 	<h3>新增圖片:</h3>

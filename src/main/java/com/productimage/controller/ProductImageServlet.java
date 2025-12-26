@@ -74,7 +74,7 @@ public class ProductImageServlet extends HttpServlet {
 			
 //			                查詢完成，準備轉交
 			req.setAttribute("piVO", piVO);
-			String url = "/listOneProductImage.jsp";
+			String url = "/back_end/productimage/listOneProductImage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 			
@@ -113,7 +113,7 @@ public class ProductImageServlet extends HttpServlet {
 			
 			if(!errorMsgs.isEmpty()) {
 				req.setAttribute("piVO", piVO);
-				RequestDispatcher failureView = req.getRequestDispatcher("/addProductImage.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/back_end/productimage/addProductImage.jsp");
 				failureView.forward(req, res);
 				return;
 			}
@@ -170,7 +170,7 @@ public class ProductImageServlet extends HttpServlet {
 			
 			if(!errorMsgs.isEmpty()) {
 				req.setAttribute("piVO", piVO);
-				RequestDispatcher failureView = req.getRequestDispatcher("/update_image_input.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/back_end/productimage/update_image_input.jsp");
 				failureView.forward(req, res);
 				return;
 			}
@@ -180,7 +180,7 @@ public class ProductImageServlet extends HttpServlet {
 			
 //                修改完成，準備轉交
 			req.setAttribute("piVO", piVO);
-			String url = "/listOneProductImage.jsp";
+			String url = "/back_end/productimage/listOneProductImage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 		}
@@ -207,7 +207,7 @@ public class ProductImageServlet extends HttpServlet {
 			
 //			查詢完成，轉交資料
 			req.setAttribute("piVO", piVO);
-			String url = "update_image_input.jsp";
+			String url = "/back_end/productimage/update_image_input.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 		}
