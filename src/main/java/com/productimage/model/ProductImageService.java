@@ -10,7 +10,7 @@ public class ProductImageService {
 		dao = new ProductImageJDBCDAO();
 	}
 	
-	public ProductImageVO addProductImage(Integer prodno, byte[] upfile) {
+	public ProductImageVO addProductImage(Integer prodno, String prodname, byte[] upfile) {
 		
 		ProductImageVO piVO = new ProductImageVO();
 		piVO.setProdno(prodno);
@@ -22,7 +22,7 @@ public class ProductImageService {
 		
 	}
 	
-	public ProductImageVO updateProductImage(Integer imgno, Integer prodno, byte[] upfile) {
+	public ProductImageVO updateProductImage(Integer imgno, Integer prodno, String prodname, byte[] upfile) {
 		
 		ProductImageVO piVO = new ProductImageVO();
 		piVO.setImgno(imgno);
@@ -44,6 +44,10 @@ public class ProductImageService {
 	
 	public List<ProductImageVO> getAll(){
 		return dao.getAll();
+	}
+	
+	public String getProdNameByProdNo(Integer prodno) {
+		return dao.getProdNameByProdNo(prodno);
 	}
 
 }

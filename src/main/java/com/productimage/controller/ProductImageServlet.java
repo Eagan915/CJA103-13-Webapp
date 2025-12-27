@@ -95,20 +95,31 @@ public class ProductImageServlet extends HttpServlet {
 			}
 			Integer prodno = Integer.valueOf(str);
 			
+			ProductImageService piSvc = new ProductImageService();
+			String prodname= piSvc.getProdNameByProdNo(prodno);
+			if(prodname == null || prodname.trim().length()==0) {
+				errorMsgs.add("商品名稱: 請勿空白");
+			}
 			
 			Part part = req.getPart("upfile");
-			InputStream in = part.getInputStream();
+			
 			byte[] upfile = null;
 			if(part == null ||  part.getSize() == 0) {
 				errorMsgs.add("請上傳圖片");
 			}else {
 //				upfile = new byte[in.available()];
 //				in.read(upfile);
-				upfile = in.readAllBytes();
-				in.close();
+				try(InputStream in = part.getInputStream();){
+					upfile = in.readAllBytes();
+				}catch(Exception e){
+					e.printStackTrace();
+					errorMsgs.add("請重新上傳");
+				}
+				
 			}
 			ProductImageVO piVO = new ProductImageVO();
 			piVO.setProdno(prodno);
+			piVO.setProdname(prodname);
 			piVO.setUpfile(upfile);
 			
 			if(!errorMsgs.isEmpty()) {
@@ -119,8 +130,7 @@ public class ProductImageServlet extends HttpServlet {
 			}
 			
 //			                 開始新增資料
-			ProductImageService piSvc = new ProductImageService();
-			piVO = piSvc.addProductImage(prodno, upfile);
+			piVO = piSvc.addProductImage(prodno, prodname, upfile);
 			
 			List<ProductImageVO> piList = piSvc.getAll();
 			req.setAttribute("piList", piList);
@@ -148,27 +158,40 @@ public class ProductImageServlet extends HttpServlet {
 //			         接受請求參數
 			Integer imgno = Integer.valueOf(req.getParameter("imgno").trim());
 			
-			String prodnoReg = "^\\d{4}$";
-			String str = req.getParameter("prodno");
-			if(str == null || str.trim().length() ==0) {
-				errorMsgs.add("商品編號: 請勿空白");
-			}else if(!str.trim().matches(prodnoReg)) {
-				errorMsgs.add("商品編號: 只能是數字，且長度為4");
+//			String prodnoReg = "^\\d{4}$";
+//			String str = req.getParameter("prodno");
+//			if(str == null || str.trim().length() ==0) {
+//				errorMsgs.add("商品編號: 請勿空白");
+//			}else if(!str.trim().matches(prodnoReg)) {
+//				errorMsgs.add("商品編號: 只能是數字，且長度為4");
+//			}
+			Integer prodno = Integer.valueOf(req.getParameter("prodno").trim());
+			
+			String prodname= req.getParameter("prodname");
+			if(prodname == null || prodname.trim().length()==0) {
+				errorMsgs.add("商品名稱: 請勿空白");
 			}
-			Integer prodno = Integer.valueOf(str);
+			
+			ProductImageService piSvc = new ProductImageService();
+			byte[] oldpic = piSvc.getOneImage(imgno).getUpfile();
 			
 			Part part = req.getPart("upfile");
-			InputStream in = part.getInputStream();
 			byte[] upfile = null;
 			if(part == null || part.getSize() == 0) {
-				errorMsgs.add("請上傳圖片");
+				upfile = oldpic;
 			}else {
-				upfile = in.readAllBytes();
-				in.close();
+				try(InputStream in = part.getInputStream();){
+					upfile = in.readAllBytes();
+					}catch(Exception e){
+						e.printStackTrace();
+						errorMsgs.add("請重新上傳");
+					}
 			}
+			
 			ProductImageVO piVO = new ProductImageVO();
 			piVO.setImgno(imgno);
 			piVO.setProdno(prodno);
+			piVO.setProdname(prodname);
 			piVO.setUpfile(upfile);
 			
 			if(!errorMsgs.isEmpty()) {
@@ -178,8 +201,7 @@ public class ProductImageServlet extends HttpServlet {
 				return;
 			}
 //                   開始修改資料
-			ProductImageService piSvc = new ProductImageService();
-			piVO = piSvc.updateProductImage(imgno, prodno, upfile);
+			piVO = piSvc.updateProductImage(imgno, prodno, prodname, upfile);
 			
 //                修改完成，準備轉交
 			req.setAttribute("piVO", piVO);

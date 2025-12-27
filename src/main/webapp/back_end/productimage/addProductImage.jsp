@@ -21,10 +21,10 @@
 <jsp:useBean id="piSvc" scope="page" class="com.productimage.model.ProductImageService"/>
 
 <form method="post" action="${pageContext.request.contextPath}/ProductImage" enctype="multipart/form-data">
-<b>選擇商品編號:</b>
+<b>選擇商品名稱:</b>
 <select name="prodno">
 <c:forEach var="piVO" items="${piSvc.all}">
-<option value="${ piVO.prodno}">商品編號:${piVO.prodno}
+<option value="${piVO.prodno}">商品名稱:${piVO.prodname}
 </c:forEach>
 </select>
 <br>

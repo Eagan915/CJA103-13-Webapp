@@ -6,8 +6,10 @@ import java.sql.Date;
 public class ProductImageVO implements Serializable{
 	private Integer imgno;
 	private Integer prodno;
+	private String prodname;
 	private Date uploaddate;
 	private byte[] upfile;
+	
 	
 	public ProductImageVO () {
 		
@@ -29,6 +31,16 @@ public class ProductImageVO implements Serializable{
 		this.prodno = prodno;
 	}
 
+	
+	public String getProdname() {
+		return prodname;
+	}
+
+	public void setProdname(String prodname) {
+		this.prodname = prodname;
+	}
+	
+	
 	public Date getUploaddate() {
 		return uploaddate;
 	}

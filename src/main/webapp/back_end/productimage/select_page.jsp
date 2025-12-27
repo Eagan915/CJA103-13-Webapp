@@ -58,6 +58,18 @@
 				 <input type="submit" value="送出">
 			</form>
 	</li>
+	<li>
+			<form method="post" action="${pageContext.request.contextPath}/ProductImage">
+				<b>選擇商品名稱:</b> 
+				<select name="imgno">
+				<c:forEach var="piVO" items="${piSvc.all}">
+				<option value="${piVO.imgno}">商品名稱:${piVO.prodname}
+				</c:forEach>
+				</select>
+				 <input type="hidden" name="action" value="getOneImage">
+				 <input type="submit" value="送出">
+			</form>
+	</li>
 	
 	<a href="${pageContext.request.contextPath}/back_end/productimage/addProductImage.jsp">新增圖片</a>
 	

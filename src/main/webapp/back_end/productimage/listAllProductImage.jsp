@@ -23,6 +23,7 @@
 		<tr>
 			<th>圖片編號</th>
 			<th>商品編號</th>
+			<th>商品名稱</th>
 			<th>上傳日期</th>
 			<th>上傳圖片</th>
 			<th>修改</th>
@@ -33,6 +34,7 @@
 			<tr>
 				<td>${piVO.imgno}</td>
 				<td>${piVO.prodno}</td>
+				<td>${piVO.prodname}</td>
 				<td>${piVO.uploaddate}</td>
 				<td><img
 					src="${pageContext.request.contextPath}/DisplayImage?imgno=${piVO.imgno}"

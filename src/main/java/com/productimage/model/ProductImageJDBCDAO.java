@@ -13,15 +13,15 @@ import java.util.List;
 
 public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 	private static final String driver = "com.mysql.cj.jdbc.Driver";
-	private static final String url = "jdbc:mysql://localhost:3306/cssample?serverTimezone=Asia/Taipei";
+	private static final String url = "jdbc:mysql://localhost:3306/test?serverTimezone=Asia/Taipei";
 	private static final String userid = "root";
 	private static final String passwd = "eagle890915";
 
-	private static final String INSERT_STMT = "INSERT INTO product_image (prod_no, upload_date, up_file) VALUES (?, ?, ?)";
+	private static final String INSERT_STMT = "INSERT INTO product_image (prod_no, prod_name, upload_date, up_file) VALUES (?, ?, ?, ?)";
 	private static final String GET_ALL_STMT = "select* from product_image";
 	private static final String GET_ONE_STMT = "select* from product_image where img_no = ?";
 	private static final String DELETE = "DELETE from product_image where img_no = ?";
-	private static final String UPDATE = "UPDATE product_image set prod_no = ?, upload_date = ?, up_file = ? where img_no = ?";
+	private static final String UPDATE = "UPDATE product_image set prod_no = ?, prod_name=?, upload_date = ?, up_file = ? where img_no = ?";
 
 	static {
 		try {
@@ -38,8 +38,9 @@ public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 				PreparedStatement pstmt = con.prepareStatement(INSERT_STMT, cols);) {
 
 			pstmt.setInt(1, piVO.getProdno());
-			pstmt.setDate(2, piVO.getUploaddate());
-			pstmt.setBytes(3, piVO.getUpfile());
+			pstmt.setString(2, piVO.getProdname());
+			pstmt.setDate(3, piVO.getUploaddate());
+			pstmt.setBytes(4, piVO.getUpfile());
 
 			pstmt.executeUpdate();
 			
@@ -62,9 +63,10 @@ public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 				PreparedStatement pstmt = con.prepareStatement(UPDATE)) {
 
 			pstmt.setInt(1, piVO.getProdno());
-			pstmt.setDate(2, piVO.getUploaddate());
-			pstmt.setBytes(3, piVO.getUpfile());
-			pstmt.setInt(4, piVO.getImgno());
+			pstmt.setString(2, piVO.getProdname());
+			pstmt.setDate(3, piVO.getUploaddate());
+			pstmt.setBytes(4, piVO.getUpfile());
+			pstmt.setInt(5, piVO.getImgno());
 
 			pstmt.executeUpdate();
 
@@ -102,6 +104,7 @@ public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 					piVO = new ProductImageVO();
 					piVO.setImgno(rs.getInt("img_no"));
 					piVO.setProdno(rs.getInt("prod_no"));
+					piVO.setProdname(rs.getString("prod_name"));
 					piVO.setUploaddate(rs.getDate("upload_date"));
 					piVO.setUpfile(rs.getBytes("up_file"));
 
@@ -126,6 +129,7 @@ public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 				piVO = new ProductImageVO();
 				piVO.setImgno(rs.getInt("img_no"));
 				piVO.setProdno(rs.getInt("prod_no"));
+				piVO.setProdname(rs.getString("prod_name"));
 				piVO.setUploaddate(rs.getDate("upload_date"));
 				piVO.setUpfile(rs.getBytes("up_file"));
 				list.add(piVO);
@@ -137,11 +141,28 @@ public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 		return list;
 	}
 	
+	public String getProdNameByProdNo(Integer prodno) {
+		String prodname = "";
+		try(Connection con = DriverManager.getConnection(url, userid, passwd);
+				PreparedStatement pstmt = con.prepareStatement("select prod_name from product_image where prod_no = ?")){
+			pstmt.setInt(1, prodno);
+			try(ResultSet rs= pstmt.executeQuery()){
+				if (rs.next()) {
+	                prodname = rs.getString("prod_name");
+	            }
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return prodname;
+	}
+	
 //	public static void main(String[] args) {
 //		ProductImageJDBCDAO dao = new ProductImageJDBCDAO();
 //		ProductImageVO piVO = dao.findByPrimaryKey(3001);
 //		System.out.print(piVO.getImgno() + ",");
 //		System.out.print(piVO.getProdno() + ",");
+//		System.out.print(piVO.getProdname() + ",");
 //		System.out.print(piVO.getUploaddate() + ",");
 //		System.out.print(piVO.getUpfile() + ",");
 //	}
@@ -151,6 +172,7 @@ public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 //		ProductImageVO piVO = new ProductImageVO();
 //		
 //		piVO.setProdno(2001);
+//		piVO.setProdname("真皮運動方向盤套");
 //		piVO.setUploaddate(new java.sql.Date(System.currentTimeMillis()));
 //		
 //		try {
@@ -167,9 +189,10 @@ public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 //	public static void main(String[] args) {
 //		ProductImageJDBCDAO dao = new ProductImageJDBCDAO();
 //		ProductImageVO piVO = new ProductImageVO();
-//		
-//		piVO.setImgno(3021);
+	
+//		ProductImageVO piVO = dao.findByPrimaryKey(3021);
 //		piVO.setProdno(2020);
+//		piVO.setProdname("車用空氣清淨機");
 //		dao.update(piVO);
 //	} 
 
@@ -185,6 +208,8 @@ public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 //		List<ProductImageVO> list = dao.getAll();
 //		for (ProductImageVO piVO : list) {
 //			System.out.print("圖片編號:"+piVO.getImgno()+"，");
+//			System.out.print("商品編號:"+piVO.getProdno()+"，");
+//			System.out.print("商品名稱:"+piVO.getProdname()+"，");
 //			System.out.print("商品編號:"+piVO.getProdno()+"，");
 //			System.out.print("上傳時間:"+piVO.getUploaddate()+"，");
 //			
