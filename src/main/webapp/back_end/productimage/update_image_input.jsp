@@ -12,8 +12,8 @@
 <c:if test="${not empty errorMsgs }">
 <font style="color:red">請修正以下錯誤</font>
 <ul>
-<c:forEach var="${message}" items="${errorMsgs}">
-<li style="color:red">message</li>
+<c:forEach var="message" items="${errorMsgs}">
+<li style="color:red">${message}</li>
 </c:forEach>
 </ul>
 </c:if>
@@ -29,6 +29,8 @@
 <input type="hidden" name="prodname" value="${piVO.prodname}">
 <input type="hidden" name="action" value="update">
 <input type="submit" value="送出修改">
+<br>
+<a href="${pageContext.request.contextPath}/ProductImage?action=getAll">返回上一頁</a>
 </form>
 </body>
 </html>

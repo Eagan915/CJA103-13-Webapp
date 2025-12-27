@@ -1,5 +1,6 @@
 package com.productimage.model;
 
+import java.sql.Date;
 import java.util.List;
 
 public class ProductImageService {
@@ -22,13 +23,14 @@ public class ProductImageService {
 		
 	}
 	
-	public ProductImageVO updateProductImage(Integer imgno, Integer prodno, String prodname, byte[] upfile) {
+	public ProductImageVO updateProductImage(Integer imgno, Integer prodno, String prodname, Date uploaddate, byte[] upfile) {
 		
 		ProductImageVO piVO = new ProductImageVO();
 		piVO.setImgno(imgno);
 		piVO.setProdno(prodno);
+		piVO.setProdname(prodname);
 		piVO.setUpfile(upfile);
-		piVO.setUploaddate(new java.sql.Date(System.currentTimeMillis()));
+		piVO.setUploaddate(uploaddate);
 		dao.update(piVO);
 		
 		return piVO;

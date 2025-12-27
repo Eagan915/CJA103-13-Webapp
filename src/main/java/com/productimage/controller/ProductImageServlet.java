@@ -3,6 +3,7 @@ package com.productimage.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -173,15 +174,19 @@ public class ProductImageServlet extends HttpServlet {
 			}
 			
 			ProductImageService piSvc = new ProductImageService();
-			byte[] oldpic = piSvc.getOneImage(imgno).getUpfile();
+			ProductImageVO oldpiVO = piSvc.getOneImage(imgno);
+			
+			Date uploaddate = null;
+			byte[] upfile = null;
 			
 			Part part = req.getPart("upfile");
-			byte[] upfile = null;
 			if(part == null || part.getSize() == 0) {
-				upfile = oldpic;
+				upfile = oldpiVO.getUpfile();
+				uploaddate = oldpiVO.getUploaddate();
 			}else {
 				try(InputStream in = part.getInputStream();){
 					upfile = in.readAllBytes();
+					uploaddate = new Date(System.currentTimeMillis());
 					}catch(Exception e){
 						e.printStackTrace();
 						errorMsgs.add("請重新上傳");
@@ -192,6 +197,7 @@ public class ProductImageServlet extends HttpServlet {
 			piVO.setImgno(imgno);
 			piVO.setProdno(prodno);
 			piVO.setProdname(prodname);
+			piVO.setUploaddate(uploaddate);
 			piVO.setUpfile(upfile);
 			
 			if(!errorMsgs.isEmpty()) {
@@ -201,7 +207,7 @@ public class ProductImageServlet extends HttpServlet {
 				return;
 			}
 //                   開始修改資料
-			piVO = piSvc.updateProductImage(imgno, prodno, prodname, upfile);
+			piVO = piSvc.updateProductImage(imgno, prodno, prodname, uploaddate,  upfile);
 			
 //                修改完成，準備轉交
 			req.setAttribute("piVO", piVO);
