@@ -17,6 +17,7 @@ public class ProductImageJDBCDAO implements ProductImageDAO_interface {
 	private static final String userid = "root";
 	private static final String passwd = "eagle890915";
 
+	
 	private static final String INSERT_STMT = "INSERT INTO product_image (prod_no, prod_name, upload_date, up_file) VALUES (?, ?, ?, ?)";
 	private static final String GET_ALL_STMT = "select* from product_image";
 	private static final String GET_ONE_STMT = "select* from product_image where img_no = ?";
